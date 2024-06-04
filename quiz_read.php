@@ -31,6 +31,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
  shuffle($result);
 $random_result = array_slice($result, 0, 10);
+
 //array_randだと、順番が昇順の範囲でしかランダムにできない
 //  $random_keys = array_rand($result, 10);
 //$random_resultの配列確認
@@ -39,24 +40,6 @@ $random_result = array_slice($result, 0, 10);
 // var_dump($random_result);
 // echo"</pre>";
 // exit();
-
-// $output = "";
-// foreach ($result as $record) {
-// //$outputに文字列を追加する
-//   $output .= "
-//     <tr>
-//       <td>問題:{$record["question"]}</td>
-//     </tr>
-//     <tr>
-//       <td>1:{$record["option1"]}</td>
-//       <td>2:{$record["option2"]}</td>
-//       <td>3:{$record["option3"]}</td>
-//       <td>4:{$record["option4"]}</td>
-//     </tr>
-//   ";}
-   
-  //  var_dump($output);
-  //  exit();
  ?>
 
 <!DOCTYPE html>
@@ -260,151 +243,163 @@ $random_result = array_slice($result, 0, 10);
       font-size: 20px;
       margin: 10px 0;
     }
-/* body {
-  font-family: 'Arial', sans-serif;
-  background-color: #f4f4f9;
-  color: #333;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
-}
-
-#quiz_Rest {
-  background: #fff;
-  padding: 20px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  max-width: 600px;
-  width: 100%;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-#quiz_Rest h1 {
-  font-size: 28px;
-  margin: 0;
-  color: #007BFF;
-}
-
-#quiz_Screen {
-  background: #fff;
-  padding: 20px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  max-width: 600px;
-  width: 100%;
-  text-align: center;
-}
-
-h1 {
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: #007BFF;
-}
-
-ol {
-  padding-left: 0;
-  list-style: none;
-}
-
-li {
-  font-size: 18px;
-  margin: 10px 0;
-  cursor: pointer;
-  padding: 10px;
-  border: 1px solid #007BFF;
+    .category{
+      width:800px;
+      border: 1px solid #ccc;
+      padding: 10px;
   border-radius: 5px;
-  transition: background-color 0.3s, color 0.3s;
-  font-style: italic; /* フォントをイタリックに変更 */
-  /* color: #555; /* テキストカラーを変更 */
-/* } */
-
-/* li:hover {
-  background-color: #007BFF;
-  color: #fff;
-} */
-
-  /* body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f4f4f9;
-    color: #333;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-  }
-
-  #quiz_Screen {
-    background: #fff;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    max-width: 800px;
-    width: 100%;
-  }
-
-  h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
-    color: #007BFF;
-  }
-
-  ol {
-    padding-left: 20px;
-  }
-
-  li {
-    font-size: 18px;
-    margin: 10px 0;
-    cursor: pointer;
-    list-style-type: decimal;
-  }
-
-  li:hover {
-    background-color: #e9ecef;
-    padding: 5px;
-    border-radius: 5px;
-  } */
-
-  /* button {
-    background-color: #007BFF;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-    margin-top: 20px;
-  } */
-
-  /* button:hover {
-    background-color: #0056b3;
-  } */
+  margin-top: 10px;
+  background: #fff;
+    }
 </style>
 
 </head>
 
 <body>
+  <!-- 最初に表示される画面 -->
     <div id="title_Screen">
     <h1>クイズゲーム１</h1>
-    <p>ジャンル:動物</p>
+    <div class="category">
+    <p>動物</p>
+    <div class="button-container">
+    <button class="difficulty-btn" onclick="startGame('初級')">初級</button>
+    <button class="difficulty-btn" onclick="startGame('中級')">中級</button>
+    <button class="difficulty-btn" onclick="startGame('上級')">上級</button>
+    </div>
+    </div>
+    <div class="category">
+    <p>歴史</p>
     <div class="button-container">
     <button class="difficulty-btn" onclick="startGame('初級')">初級</button>
     <button class="difficulty-btn" onclick="startGame('中級')">中級</button>
     <button class="difficulty-btn" onclick="startGame('上級')">上級</button>
   </div>
   </div>
+  </div>
+  <!-- クイズ画面 -->
    <div id="quiz_Rest" style="display:none;"></div>
-  <div id="quiz_Screen" style="display:none;"></div>
+   <div id="quiz_Screen" style="display:none;"></div>
   <div id="result"></div>
+<!-- リザルト画面 -->
   <div id="result_Screen" style="display: none;"></div>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
-// let data=
+/*************************************************************************************************
+ 変数の設定
+**************************************************************************************************/
+// phpからデータをもらう
+    let data = <?= json_encode($random_result) ?>;
+    // console.log(data);
+//data配列の要素をランダムに指定
+    let create_Quiz = Math.floor(Math.random() * data.length);
+//クイズデータをランダムに取り出す
+    let Quiz = data[create_Quiz];
+//問題文
+    let create_Q = Quiz.question;
+//選択肢1
+    let create_OP_1 = Quiz.option1;
+//選択肢2
+    let create_OP_2 = Quiz.option2;
+//選択肢3
+    let create_OP_3 = Quiz.option3;
+//選択肢4
+    let create_OP_4 = Quiz.option4;
+//クイズが何問目かカウント(問題数表示用)
+    let count_Quiz = 1;
+//クイズに何問正解したかカウント(リザルト画面表示用)
+    let correctCount = 0;
+//正解した問題の情報を入れる配列（リザルト画面表示用）
+    let history = [];
+//ゲームをスタートさせる関数
+    function startGame(difficulty) {
+      //タイトル画面を消して、クイズ画面を見せる
+      $('#title_Screen').hide();
+      $('#quiz_Rest').show();
+      $('#quiz_Screen').show();
+      Quiz_Recreate();
+    }
+//クイズを作成する関数
+    function Quiz_Recreate() {
+      create_Quiz = Math.floor(Math.random() * data.length);
+      Quiz = data[create_Quiz];
+      create_Q = Quiz.question;
+      create_OP_1 = Quiz.option1;
+      create_OP_2 = Quiz.option2;
+      create_OP_3 = Quiz.option3;
+      create_OP_4 = Quiz.option4;
+    }
+//まるかバツを表示→問題表示or終了させる関数
+    function displayResult(correct) {
+      const resultDiv = $("#result");
+      if (correct) {
+        resultDiv.html('<div class="circle"></div>');
+        correctCount++;
+      } else {
+        resultDiv.html('<div class="cross"></div>');
+      }
+      resultDiv.show();
+      setTimeout(() => {
+        resultDiv.hide();
+        if (data.length !== 0) {
+          count_Quiz++;
+          Quiz_Recreate();
+          $("#quiz_Rest").html(`<h1>第${count_Quiz}問</h1>`);
+          $("#quiz_Screen").html(`<h1>${create_Q}</h1><ol><li data-option="1">${create_OP_1}</li><li data-option="2">${create_OP_2}</li><li data-option="3">${create_OP_3}</li><li data-option="4">${create_OP_4}</li></ol>`);
+          $("li").click(after_Answer);
+        } else {
+          $("#quiz_Rest").html('<h1>クイズ終了</h1>');
+          $("#quiz_Screen").empty();
+          displayFinalResult();
+        }
+      }, 500);
+    }
+//回答した問題を保存,正解不正解を記録する関数
+    function after_Answer() {
+      $("li").off("click");
+      const selectedOption = $(this).data('option');
+      const correctAnswer = Quiz.answer;
+      const correct = selectedOption == correctAnswer;
+      history.push({
+        question: create_Q,
+        correct: correct,
+        answer: Quiz["option" + correctAnswer],
+        explanation: Quiz.explanation
+      });
+      displayResult(correct);
+      data.splice(create_Quiz, 1);
+    }
+
+    function displayFinalResult() {
+      const resultScreen = $("#result_Screen");
+      let resultHtml = `<h1>正答数 ${correctCount}/${count_Quiz} 問</h1>`;
+      history.forEach((pick, i) => {
+        resultHtml += `<div class="result-block">
+          <h2>第${i + 1}問: <span class="${pick.correct ? 'correct-text' : 'incorrect-text'}">${pick.correct ? "正解" : "不正解"}</span></h2>
+          <div class="result-content">
+          <p>問題: ${pick.question}</p>
+          <p>答え: ${pick.answer}</p>
+          <p>解説: ${pick.explanation}</p>
+          </div>
+        </div>`;
+      });
+      resultScreen.html(resultHtml);
+      resultScreen.show();
+    }
+ $(document).ready(function() {
+
+      $(".difficulty-btn").click(function() {
+        const difficulty = $(this).data("difficulty");
+        startGame(difficulty);
+      });
+    $("#quiz_Rest").html(`<h1>第${count_Quiz}問</h1>`);
+    $("#quiz_Screen").html(`<h1>${create_Q}</h1><ol><li data-option="1">${create_OP_1}</li><li data-option="2">${create_OP_2}</li><li data-option="3">${create_OP_3}</li><li data-option="4">${create_OP_4}</li></ol>`);
+    $("li").click(after_Answer);
+      });
+
+
+
+
+      // let data=
 // console.log(data);
 // //問題をランダムに指定
 //  let create_Quiz=Math.floor(Math.random()*data.length);
@@ -480,14 +475,14 @@ li {
 //       create_OP_4 = Quiz.option4;
 //     }
 
-//     function handleAnswer() {
+//     function after_Answer() {
 //       data.splice(create_Quiz, 1);
 //       if (data.length !== 0) {
 //         count_Quiz++;
 //         Quiz_Recreate();
 //         $("#quiz_Rest").html(`<h1>第${count_Quiz}問</h1>`);
 //         $("#quiz_Screen").html(`<h1>${create_Q}</h1><ol><li>1.${create_OP_1}</li><li>2.${create_OP_2}</li><li>3.${create_OP_3}</li><li>4.${create_OP_4}</li></ol>`);
-//         $("li").click(handleAnswer);
+//         $("li").click(after_Answer);
 //         console.log(Quiz);
 //       } else {
 //         console.log("finish");
@@ -495,7 +490,7 @@ li {
 //     }
 // $("#quiz_Rest").html(`<h1>第${count_Quiz}問</h1>`);
 //     $("#quiz_Screen").html(`<h1>${create_Q}</h1><ol><li>1.${create_OP_1}</li><li>2.${create_OP_2}</li><li>3.${create_OP_3}</li><li>4.${create_OP_4}</li></ol>`);
-//     $("li").click(handleAnswer);
+//     $("li").click(after_Answer);
     // let data = ;
     // console.log(data);
     // let create_Quiz = Math.floor(Math.random() * data.length);
@@ -532,7 +527,7 @@ li {
     //       Quiz_Recreate();
     //       $("#quiz_Rest").html(`<h1>第${count_Quiz}問</h1>`);
     //       $("#quiz_Screen").html(`<h1>${create_Q}</h1><ol><li data-option="1">${create_OP_1}</li><li data-option="2">${create_OP_2}</li><li data-option="3">${create_OP_3}</li><li data-option="4">${create_OP_4}</li></ol>`);
-    //       $("li").click(handleAnswer);
+    //       $("li").click(after_Answer);
     //     } else {
     //       $("#quiz_Rest").html('<h1>クイズ終了</h1>');
     //       $("#quiz_Screen").empty();
@@ -540,7 +535,7 @@ li {
     //   }, 1000);
     // }
 
-    // function handleAnswer() {
+    // function after_Answer() {
     //   const selectedOption = $(this).data('option');
     //   const correctAnswer = Quiz.answer;
     //   const correct = selectedOption == correctAnswer;
@@ -550,105 +545,9 @@ li {
 
     // $("#quiz_Rest").html(`<h1>第${count_Quiz}問</h1>`);
     // $("#quiz_Screen").html(`<h1>${create_Q}</h1><ol><li data-option="1">${create_OP_1}</li><li data-option="2">${create_OP_2}</li><li data-option="3">${create_OP_3}</li><li data-option="4">${create_OP_4}</li></ol>`);
-    // $("li").click(handleAnswer);
-    let data = <?= json_encode($random_result) ?>;
-    console.log(data);
-    let create_Quiz = Math.floor(Math.random() * data.length);
-    let Quiz = data[create_Quiz];
-    let create_Q = Quiz.question;
-    let create_OP_1 = Quiz.option1;
-    let create_OP_2 = Quiz.option2;
-    let create_OP_3 = Quiz.option3;
-    let create_OP_4 = Quiz.option4;
-    let count_Quiz = 1;
-    let correctCount = 0;
-    let history = [];
+    // $("li").click(after_Answer);
 
 
-    function startGame(difficulty) {
-      console.log("Selected Difficulty:", difficulty);
-      $('#title_Screen').hide();
-      $('#quiz_Rest').show();
-      $('#quiz_Screen').show();
-      Quiz_Recreate();
-    }
-
-    function Quiz_Recreate() {
-      create_Quiz = Math.floor(Math.random() * data.length);
-      Quiz = data[create_Quiz];
-      create_Q = Quiz.question;
-      create_OP_1 = Quiz.option1;
-      create_OP_2 = Quiz.option2;
-      create_OP_3 = Quiz.option3;
-      create_OP_4 = Quiz.option4;
-    }
-
-    function displayResult(correct) {
-      const resultDiv = $("#result");
-      if (correct) {
-        resultDiv.html('<div class="circle"></div>');
-        correctCount++;
-      } else {
-        resultDiv.html('<div class="cross"></div>');
-      }
-      resultDiv.show();
-      setTimeout(() => {
-        resultDiv.hide();
-        if (data.length !== 0) {
-          count_Quiz++;
-          Quiz_Recreate();
-          $("#quiz_Rest").html(`<h1>第${count_Quiz}問</h1>`);
-          $("#quiz_Screen").html(`<h1>${create_Q}</h1><ol><li data-option="1">${create_OP_1}</li><li data-option="2">${create_OP_2}</li><li data-option="3">${create_OP_3}</li><li data-option="4">${create_OP_4}</li></ol>`);
-          $("li").click(handleAnswer);
-        } else {
-          $("#quiz_Rest").html('<h1>クイズ終了</h1>');
-          $("#quiz_Screen").empty();
-          displayFinalResult();
-        }
-      }, 500);
-    }
-
-    function handleAnswer() {
-      $("li").off("click");
-      const selectedOption = $(this).data('option');
-      const correctAnswer = Quiz.answer;
-      const correct = selectedOption == correctAnswer;
-      history.push({
-        question: create_Q,
-        correct: correct,
-        answer: Quiz["option" + correctAnswer],
-        explanation: Quiz.explanation
-      });
-      displayResult(correct);
-      data.splice(create_Quiz, 1);
-    }
-
-    function displayFinalResult() {
-      const resultScreen = $("#result_Screen");
-      let resultHtml = `<h1>正答数 ${correctCount}/${count_Quiz} 問</h1>`;
-      history.forEach((pick, i) => {
-        resultHtml += `<div class="result-block">
-          <h2>第${i + 1}問: <span class="${pick.correct ? 'correct-text' : 'incorrect-text'}">${pick.correct ? "正解" : "不正解"}</span></h2>
-          <div class="result-content">
-          <p>問題: ${pick.question}</p>
-          <p>答え: ${pick.answer}</p>
-          <p>解説: ${pick.explanation}</p>
-          </div>
-        </div>`;
-      });
-      resultScreen.html(resultHtml);
-      resultScreen.show();
-    }
- $(document).ready(function() {
-
-      $(".difficulty-btn").click(function() {
-        const difficulty = $(this).data("difficulty");
-        startGame(difficulty);
-      });
-    $("#quiz_Rest").html(`<h1>第${count_Quiz}問</h1>`);
-    $("#quiz_Screen").html(`<h1>${create_Q}</h1><ol><li data-option="1">${create_OP_1}</li><li data-option="2">${create_OP_2}</li><li data-option="3">${create_OP_3}</li><li data-option="4">${create_OP_4}</li></ol>`);
-    $("li").click(handleAnswer);
-      });
   </script>
 </body>
 
