@@ -13,9 +13,8 @@ if (
 ) {
   exit('ParamError');
 }
-
-$category = $_POST['category'];
-$difficulty = $_POST['difficulty'];
+$category = intval($_POST['category']);
+$difficulty = intval($_POST['difficulty']);
 $quiz = $_POST['quiz'];
 $A_1 = $_POST['A_1'];
 $A_2 = $_POST['A_2'];
@@ -25,7 +24,7 @@ $Answer = $_POST['answer'];
 $explanation = $_POST['explanation'];
 
 // 各種項目設定
-$dbn ='mysql:dbname=gs_DB_work;charset=utf8mb4;port=3306;host=localhost';
+$dbn = 'mysql:dbname=gs_DB_work;charset=utf8mb4;port=3306;host=localhost';
 $user = 'root';
 $pwd = '';
 
@@ -43,10 +42,10 @@ try {
 $pdo->prepareでPDOクラスのメソッドprepareを使いSQL文実行。
 SELECT id FROM category=>categoryテーブルからidカラムの値を取得。
 WHERE category = :category=>条件の指定。
-*****************************************************************************************************/
-$category_stmt = $pdo->prepare('SELECT id FROM category_table WHERE category = :category');
+ *****************************************************************************************************/
+$category_stmt = $pdo->prepare('SELECT id FROM category_table WHERE id = :id');
 //:categoryに実際の値をバインド。PDO::PARAM_STRは値の型を指定。（この場合、文字列型）
-$category_stmt->bindValue(':category', $category, PDO::PARAM_STR);
+$category_stmt->bindValue(':id', $category, PDO::PARAM_STR);
 //prepareしているSQL文を実行
 $category_stmt->execute();
 /*
@@ -60,15 +59,15 @@ $category_result = $category_stmt->fetch(PDO::FETCH_ASSOC);
 //TODO:解決→データベース内のカテゴリー名と、htmlのoptionタグのvalueを同じ表記に変更
 //category_result確認用のコード
 if (!$category_result) {
-    exit('Category_resultが見つかりません');
+  exit('Category_resultが見つかりません');
 }
 $category_id = $category_result['id'];
 //var_dump(category_id) //array(1) { ["id"]=> int(2) }
 
 
 // 難易度IDの取得
-$difficulty_stmt = $pdo->prepare('SELECT id FROM difficulty_table WHERE difficulty = :difficulty');
-$difficulty_stmt->bindValue(':difficulty', $difficulty, PDO::PARAM_STR);
+$difficulty_stmt = $pdo->prepare('SELECT id FROM difficulty_table WHERE id = :id');
+$difficulty_stmt->bindValue(':id', $difficulty, PDO::PARAM_STR);
 $difficulty_stmt->execute();
 $difficulty_result = $difficulty_stmt->fetch(PDO::FETCH_ASSOC);
 $difficulty_id = $difficulty_result['id'];
@@ -107,6 +106,3 @@ if ($status) {
 } else {
   exit('InsertError');
 }
-?>
-
-
