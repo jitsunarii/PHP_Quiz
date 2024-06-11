@@ -234,6 +234,7 @@
   <!-- 最初に表示される画面 -->
   <div id="title_Screen">
     <h1>クイズゲーム１</h1>
+    <a href="quiz_read.php">保存されている問題の確認</a>
     <div class="category">
       <div id="animal">
         <p>動物</p>
@@ -333,6 +334,7 @@
           <input type="hidden" name="category" value="5">
           <input type="hidden" name="difficulty" value="3">
           <button type="submit" class="difficulty-btn">上級</button>
+        </form>
       </div>
     </div>
     <div class="category">

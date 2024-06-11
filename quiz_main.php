@@ -221,7 +221,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         //正解した問題の情報を入れる配列（リザルト画面表示用）
         let history = [];
 
-        let create_Quiz;
+        //問題を生成する関数
 
         function recreate_Quiz() {
             count_Quiz++;
@@ -242,6 +242,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         関数の設定
         *******************************************************************************************************************/
         //まるかバツを表示→問題表示or終了させる関数
+
         function displayResult(correct) {
             console.log(data);
             const resultDiv = $("#result");
@@ -256,9 +257,6 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 resultDiv.hide();
                 if (count_Quiz < 10) {
                     recreate_Quiz();
-                    // $("#quiz_Rest").html(`<h1>第${count_Quiz}問</h1>`);
-                    // $("#quiz_Screen").html(`<h1>${create_Q}</h1><ol><li data-option="1">${create_OP_1}</li><li data-option="2">${create_OP_2}</li><li data-option="3">${create_OP_3}</li><li data-option="4">${create_OP_4}</li></ol>`);
-                    // $("li").click(after_Answer);
                 } else {
                     $("#quiz_Rest").html('<h1>クイズ終了</h1>');
                     $("#quiz_Screen").empty();
@@ -267,6 +265,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             }, 1000);
         }
         //回答した問題を保存,正解不正解を記録する関数
+
         function after_Answer() {
             $("li").off("click");
             const selectedOption = $(this).data('option');
@@ -282,6 +281,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         }
         //リザルト画面を作成する関数
+
         function displayFinalResult() {
             const resultScreen = $("#result_Screen");
             let resultHtml = `<h1>正答数 ${correctCount}/${count_Quiz} 問</h1>`;
